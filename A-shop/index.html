@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>A-shop</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header img {
+      width: 40px;
+    }
+    .product {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .product img {
+      width: 120px;
+      height: auto;
+      border-radius: 8px;
+    }
+    .cart {
+      margin-top: 30px;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .cart ul {
+      padding-left: 20px;
+    }
+    .total {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="IMG_0758.jpg" alt="商品画像" style="width: 400px; height: auto;">
+
+
+    <h1 style="font-size: 200px;">A-shop </h1>
+
+  </div>
+
+  <!-- 商品１ -->
+  <div class="product">
+    <img src="IMG_0993.PNG" alt="商品画像" style="width: 100px; height: auto;">
+
+    <div>
+      <p><strong>商品名:</strong> A-next Plus</p>
+      <p><strong>週額:</strong> ¥1000</p>
+      <p><strong>備考:</strong> A-next A-next lite よりもずっと有能な有料動画サイトを観覧できます。</p>
+      <button onclick="addToCart('A-next complete', 1000)">カートに入れる</button>
+    </div>
+  </div>
+
+  <!-- 商品２ -->
+  <div class="product">
+    <img src="IMG_0992.PNG" alt="商品画像" style="width: 100px; height: auto;">
+
+    <div>
+      <p><strong>商品名:</strong> A-next New Complete</p>
+      <p><strong>週額:</strong> ¥2000</p>
+      <p><strong>備考:</strong> A-next Plus よりもずっと有能な有料動画サイトを観覧できます。</p>
+      <button onclick="addToCart('A-next complete', 2000)">カートに入れる</button>
+    </div>
+  </div>
+
+  <!-- 商品３ -->
+  <div class="product">
+    <img
+
+    <img src="IMG_0759.jpg" alt="商品画像" style="width: 100px; height: auto;">
+
+    ">
+    <div>
+      <p><strong>商品名:</strong>　A-next　広告を出す権利</p>
+      <p><strong>週額</strong> ¥500</p>
+      <p><strong>備考:</strong> 広告で人気度を高めることができます</p>
+      <button onclick="addToCart('A-next　広告を出す権利', 500)">カートに入れる</button>
+    </div>
+  </div>
+
+  <!-- 商品４ -->
+  <div class="product">
+    <img src="IMG_0760.jpg" alt="商品画像" style="width: 100px; height: auto;">
+
+    <div>
+      <p><strong>商品名:</strong> 自分の動画をアップロードする権利</p>
+      <p><strong>価格:</strong> 300</p>
+      <p><strong>備考:</strong> 誰でもA-next　completeに動画を出すことができます！</p>
+      <button onclick="addToCart('自分の動画をアップロードする権利', 300)">カートに入れる</button>
+    </div>
+  </div>
+
+  <!-- 商品５ -->
+  <div class="product">
+    <img src="IMG_0761.jpg" alt="商品画像" style="width: 100px; height: auto;">
+
+    <div>
+      <p><strong>商品名:</strong> インターネット注文サイト</p>
+      <p><strong>価格:</strong> ¥5000</p>
+      <p><strong>備考:</strong> そこのあなたの会社もA-shopのようなネット注文サイトを作ることができます！</p>
+      <button onclick="addToCart('インターネット注文サイト', 5000)">カートに入れる</button>
+    </div>
+  </div>
+
+<button onclick="submitCart()">📝 注文を送信</button>
+
+<script>
+function submitCart() {
+if (cart.length === 0) {
+alert("カートが空です！");
+return;
+}
+
+// 商品名と数量を文字列にまとめる
+const productText = cart.map(item => `${item.name} x${item.quantity}`).join(', ');
+
+// 合計金額の計算
+const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+// Googleフォームの送信先URL
+const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeR2GQbix7n1vYwrt0TOfixF9zPjnlQowod0U26ezPJRFFBbw/formResponse";
+
+// フォームのentry番号（商品名と合計金額）
+const productEntry = "entry.516663896";
+const totalEntry = "entry.488710591";
+
+// フォームデータをURLエンコードして作成
+const params = new URLSearchParams();
+params.append(productEntry, productText);
+params.append(totalEntry, total);
+
+// フォーム送信（新しいタブで開くことで名前・IDを手入力）
+const fullUrl = `${formUrl}?${params.toString()}`;
+window.open(fullUrl, "_blank");
+}
+</script>
+
+
+</body>
+</html>
+ <h2>🛒 カートの中身</h2>
+<ul id="cartList"></ul>
+<p id="totalAmount">🧾 合計金額: ¥0</p>
+
+<script>
+  const cart = [];
+
+  function addToCart(name, price) {
+    const found = cart.find(item => item.name === name);
+    if (found) {
+      found.quantity++;
+    } else {
+      cart.push({ name, price, quantity: 1 });
+    }
+    renderCart();
+  }
+
+  function changeQuantity(name, amount) {
+    const item = cart.find(i => i.name === name);
+    if (item) {
+      item.quantity += amount;
+      if (item.quantity <= 0) {
+        removeItem(name);
+      }
+    }
+    renderCart();
+  }
+
+  function removeItem(name) {
+    const index = cart.findIndex(i => i.name === name);
+    if (index !== -1) {
+      cart.splice(index, 1);
+    }
+    renderCart();
+  }
+
+  function renderCart() {
+    const cartList = document.getElementById("cartList");
+    const totalAmount = document.getElementById("totalAmount");
+    cartList.innerHTML = "";
+
+    let total = 0;
+
+    cart.forEach(item => {
+      total += item.price * item.quantity;
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+        ${item.name} × ${item.quantity}（¥${item.price}）
+        <button onclick="changeQuantity('${item.name}', 1)">＋</button>
+        <button onclick="changeQuantity('${item.name}', -1)">－</button>
+        <button onclick="removeItem('${item.name}')">削除</button>
+      `;
+      cartList.appendChild(li);
+    });
+
+    totalAmount.textContent = `🧾 合計金額: ¥${total}`;
+  }
+</script>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>カートページ</title>
+</head>
+<body>
+  
+
